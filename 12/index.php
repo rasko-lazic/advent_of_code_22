@@ -81,6 +81,7 @@ while (count($potentialPaths) > 0) {
         } else {
             $currentPath[] = $nextStep;
             renderScreen($currentPath);
+            usleep(20000);
         }
 
 //        var_dump($currentPath, $potentialPaths);
@@ -131,8 +132,8 @@ exit();
 
 function getNextSteps($currentLocation, $partialPath): array {
     $allNextSteps = [
-        [$currentLocation[0], $currentLocation[1] + 1],
         [$currentLocation[0] - 1, $currentLocation[1]],
+        [$currentLocation[0], $currentLocation[1] + 1],
         [$currentLocation[0] + 1, $currentLocation[1]],
         [$currentLocation[0], $currentLocation[1] - 1],
     ];
@@ -146,11 +147,9 @@ function getNextSteps($currentLocation, $partialPath): array {
 
 function renderScreen($path): void
 {
-    foreach (GRID as $row) {
-        $mappedRow = implode('.', array_map(fn ($item) => "\033[32mo\033[0m", $row));
-        echo "$mappedRow\n";
+    popen('cls', 'w');
+    foreach (GRID as $rowKey => $row) {
+        $mappedRow = implode('.', array_map(fn ($item, $columnKey) => in_array([$rowKey, $columnKey], $path) ? "\033[32mo\033[0m" : 'o', $row, array_keys($row)));
+        echo "$mappedRow\r\n";
     }
-//    popen('cls', 'w');
-    echo "\033[31m some colored text \033[0m some white text \n";
-    exit();
 }
