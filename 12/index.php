@@ -81,7 +81,7 @@ while (count($potentialPaths) > 0) {
         } else {
             $currentPath[] = $nextStep;
             renderScreen($currentPath);
-            usleep(20000);
+            usleep(500000);
         }
 
 //        var_dump($currentPath, $potentialPaths);
@@ -147,9 +147,10 @@ function getNextSteps($currentLocation, $partialPath): array {
 
 function renderScreen($path): void
 {
-    popen('cls', 'w');
     foreach (GRID as $rowKey => $row) {
-        $mappedRow = implode('.', array_map(fn ($item, $columnKey) => in_array([$rowKey, $columnKey], $path) ? "\033[32mo\033[0m" : 'o', $row, array_keys($row)));
-        echo "$mappedRow\r\n";
+        $mappedRows[] = implode('.', array_map(fn ($item, $columnKey) => in_array([$rowKey, $columnKey], $path) ? "-" : 'o', $row, array_keys($row)));
     }
+    $implodedRows = implode("\n", $mappedRows);
+    popen('cls', 'w');
+    echo "$implodedRows";
 }
